@@ -2,7 +2,7 @@
 
 A checklist for the start of an installation. Fill it out on your phone, make a PDF report, and email it.
 
-**App link:** https://YOUR-USERNAME.github.io/toi-checklist/
+**App link:** https://kdc392.github.io/toi-checklist/
 
 Open the link, then follow the steps for your phone below. Do this once. After that, open the app from its icon on your Home Screen.
 
