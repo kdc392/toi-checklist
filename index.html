@@ -1,0 +1,665 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1d5c63"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="TOI Checklist"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="apple-touch-icon" href="icons/icon-192.png"></head><body>
+<title>TOI Site Start Checklist (Copy)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single narrow column built for a phone held on a slab. Sticky progress bar,
+   one card per inspection area, big Yes/No toggles, Go/No-Go decision at the end. */
+:root {
+  --bg: #eef0ee;
+  --surface: #ffffff;
+  --fg: #1c2421;
+  --muted: #5d6a65;
+  --line: #d3d9d5;
+  --accent: #1d5c63;
+  --accent-fg: #ffffff;
+  --go: #1f7a45;
+  --nogo: #b42318;
+  --warn-bg: #fdf1e3;
+  --warn-fg: #7a3e00;
+  --field: #f6f8f6;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131917; --surface: #1c2421; --fg: #e8eeea; --muted: #9aa8a2; --line: #31403a;
+    --accent: #5fb3bb; --accent-fg: #0d1614; --go: #4fbf7e; --nogo: #f0766b;
+    --warn-bg: #3a2a14; --warn-fg: #f3c488; --field: #151c19; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131917; --surface: #1c2421; --fg: #e8eeea; --muted: #9aa8a2; --line: #31403a;
+  --accent: #5fb3bb; --accent-fg: #0d1614; --go: #4fbf7e; --nogo: #f0766b;
+  --warn-bg: #3a2a14; --warn-fg: #f3c488; --field: #151c19; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.4;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap { max-width: 720px; margin: 0 auto; }
+header.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--surface);
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) 12px max(16px, env(safe-area-inset-left, 0px));
+  border-bottom: 1px solid var(--line);
+}
+.top-inner { max-width: 720px; margin: 0 auto; display: grid; gap: 8px; }
+.top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; letter-spacing: .02em; text-transform: uppercase; margin: 0; line-height: 1.1; }
+.count { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+main { display: grid; gap: 16px; padding-top: 16px; }
+section.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 14px; }
+h2 { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; letter-spacing: .04em; text-transform: uppercase; margin: 0; color: var(--accent); }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.grid .wide { grid-column: 1 / -1; }
+.f { display: grid; gap: 4px; min-width: 0; }
+.f > label, .lbl { font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+input[type=text], input[type=date], input[type=time], textarea, .num input {
+  width: 100%; min-width: 0; font: inherit; color: var(--fg); background: var(--field);
+  border: 1px solid var(--line); border-radius: 6px; padding: 10px 11px; min-height: 44px;
+}
+textarea { min-height: 88px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, .seg input:focus-visible + label, .gng input:focus-visible + label, button:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.num { position: relative; }
+.num input { font-family: var(--font-mono); font-variant-numeric: tabular-nums; padding-right: 38px; }
+.num span { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); font-family: var(--font-mono); font-size: .8rem; color: var(--muted); pointer-events: none; }
+.hint { font-size: .8rem; color: var(--muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.hint b { font-family: var(--font-mono); font-weight: 500; color: var(--fg); }
+.hint button { font: inherit; font-size: .78rem; font-weight: 600; color: var(--accent); background: none; border: 1px solid var(--accent); border-radius: 5px; padding: 4px 9px; min-height: 30px; cursor: pointer; }
+.yn { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.yn:first-of-type { border-top: 0; padding-top: 0; }
+.yn .q { flex: 1; min-width: 0; font-size: .95rem; }
+.seg { display: flex; flex: none; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+.seg input, .gng input { position: absolute; opacity: 0; pointer-events: none; }
+.seg { position: relative; }
+.seg label { display: grid; place-items: center; min-width: 52px; min-height: 44px; padding: 0 12px; font-weight: 600; font-size: .9rem; color: var(--muted); background: var(--field); cursor: pointer; user-select: none; }
+.seg label + input + label, .seg input + label + input + label { border-left: 1px solid var(--line); }
+.seg input[value=yes]:checked + label { background: var(--go); color: #fff; }
+.seg input[value=no]:checked + label { background: var(--nogo); color: #fff; }
+.review { background: var(--warn-bg); color: var(--warn-fg); border-radius: 8px; padding: 12px 14px; font-size: .9rem; display: grid; gap: 6px; }
+.review[hidden] { display: none; }
+.review strong { font-weight: 600; }
+.review ul { margin: 0; padding-left: 18px; }
+.gng { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; position: relative; }
+.gng label { display: grid; gap: 2px; align-content: center; text-align: center; min-height: 76px; padding: 10px; border: 2px solid var(--line); border-radius: 9px; cursor: pointer; background: var(--field); }
+.gng .big { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; letter-spacing: .05em; line-height: 1; }
+.gng .sm { font-size: .78rem; color: var(--muted); }
+.gng input[value=go]:checked + label { border-color: var(--go); background: var(--go); color: #fff; }
+.gng input[value=nogo]:checked + label { border-color: var(--nogo); background: var(--nogo); color: #fff; }
+.gng input:checked + label .sm { color: inherit; opacity: .9; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn { font: inherit; font-weight: 600; min-height: 46px; padding: 0 18px; border-radius: 8px; cursor: pointer; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-fg); }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn.danger { background: var(--nogo); border-color: var(--nogo); color: #fff; }
+.note { font-size: .8rem; color: var(--muted); }
+.confirm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.confirm[hidden] { display: none; }
+label.btn { display: inline-flex; align-items: center; justify-content: center; }
+.btn[disabled] { opacity: .55; cursor: default; }
+.photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.photos:empty { display: none; }
+.ph { display: grid; gap: 6px; background: var(--field); border: 1px solid var(--line); border-radius: 8px; padding: 6px; min-width: 0; }
+.ph img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 5px; display: block; background: var(--line); }
+.ph-row { display: flex; gap: 6px; min-width: 0; }
+.ph-row input[type=text] { min-height: 40px; padding: 8px; font-size: .85rem; background: var(--surface); }
+.ph-row button { flex: none; font: inherit; font-size: .8rem; font-weight: 600; min-width: 40px; min-height: 40px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--nogo); cursor: pointer; }
+.report { display: grid; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+.report[hidden] { display: none; }
+.report .ready { font-size: .9rem; }
+.report .ready b { font-family: var(--font-mono); font-weight: 500; }
+@media (max-width: 420px) { .grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-inner">
+      <div class="top-row"><h1>Time of Install</h1><span class="count" id="count">0 / 0</span></div>
+      <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
+    </div>
+  </header>
+  <main id="form"></main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var SECTIONS = [
+  { title: "Job details", kind: "info", fields: [
+    ["project","Project","text","wide"],["location","Location","text","wide"],
+    ["date","Date","date"],["time","Time","time"],
+    ["installer","Installer","text"],["gc","General contractor","text"],
+    ["mfr","Flooring manufacturer","text"],["product","Flooring product","text"],
+    ["lot","Adhesive / lot #","text","wide"]
+  ]},
+  { title: "Environmental conditions", nums: [
+    ["air","Ambient air temp","°F"],["rh","Ambient RH","%"],
+    ["surf","Surface temp","°F"],["dew","Dew point","°F"]
+  ], dew: true, yn: [["aboveDew","Surface temperature above dew point"]] },
+  { title: "Concrete / substrate", nums: [
+    ["imp","Surface moisture (impedance)","%"],["ph","Concrete pH",""],
+    ["rhprobe","RH probe (if required)","%"]
+  ], yn: [["clean","Substrate clean"],["sound","Sound"],["dry","Dry"],
+    ["flat","Flatness meets specification"],["cracks","Visible cracks / movement joints documented"]] },
+  { title: "Materials", nums: [
+    ["ftemp","Flooring product temp","°F"],["atemp","Adhesive temp","°F"],
+    ["ptemp","Floor prep / product temp","°F"]
+  ], yn: [["accl","Materials properly acclimated"],["adh","Correct adhesive confirmed"],["lots","Lot numbers recorded"]] },
+  { title: "Floor preparation", yn: [
+    ["mech","Surface mechanically prepared as required"],["dust","Dust removed"],
+    ["cured","Floor prep fully cured"],["water","Water used for floor prep within manufacturer's temperature requirements"]] },
+  { title: "Installation verification", yn: [
+    ["instr","Manufacturer installation instructions reviewed"],["trowel","Proper trowel confirmed"],
+    ["open","Open time verified"],["work","Working time verified"],
+    ["layout","Layout approved"],["test","First test area installed and inspected"]] },
+  { title: "Documentation", yn: [
+    ["photos","Jobsite photos taken"],["envphoto","Environmental readings photographed"],
+    ["moist","Moisture readings recorded"],["exc","Exceptions / concerns reported before installation"]],
+    comments: true }
+];
+
+var form = document.getElementById("form");
+var state = {};
+var ynLabels = {}, ynIds = [], numIds = [];
+
+function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"); }
+
+function ynHtml(id, q) {
+  ynLabels[id] = q; ynIds.push(id);
+  return '<div class="yn"><div class="q">' + esc(q) + '</div><div class="seg" role="radiogroup" aria-label="' + esc(q) + '">' +
+    '<input type="radio" name="' + id + '" id="' + id + '-yes" value="yes"><label for="' + id + '-yes">Yes</label>' +
+    '<input type="radio" name="' + id + '" id="' + id + '-no" value="no"><label for="' + id + '-no">No</label></div></div>';
+}
+function numHtml(id, label, unit) {
+  numIds.push(id);
+  return '<div class="f"><label for="' + id + '">' + esc(label) + '</label><div class="num"><input type="text" inputmode="decimal" id="' + id + '" name="' + id + '" autocomplete="off" placeholder="0">' + (unit ? '<span>' + unit + '</span>' : '') + '</div></div>';
+}
+
+var html = "";
+SECTIONS.forEach(function (s) {
+  html += '<section class="card"><h2>' + esc(s.title) + '</h2>';
+  if (s.kind === "info") {
+    html += '<div class="grid">' + s.fields.map(function (f) {
+      return '<div class="f ' + (f[3] || "") + '"><label for="' + f[0] + '">' + f[1] + '</label><input type="' + f[2] + '" id="' + f[0] + '" name="' + f[0] + '" autocomplete="off"></div>';
+    }).join("") + '</div>';
+  }
+  if (s.nums) html += '<div class="grid">' + s.nums.map(function (n) { return numHtml(n[0], n[1], n[2]); }).join("") + '</div>';
+  if (s.dew) html += '<div class="hint" id="dewhint"></div>';
+  if (s.yn) html += '<div>' + s.yn.map(function (q, i) { return ynHtml(q[0], q[1]); }).join("") + '</div>';
+  if (s.comments) html += '<div class="f"><label for="comments">Comments / observations</label><textarea id="comments" name="comments"></textarea></div>';
+  html += '</section>';
+});
+
+html += '<section class="card"><h2>Photos</h2>' +
+  '<div class="note">Take or pick photos of the slab, meter readings and materials. They go into the PDF report with your captions.</div>' +
+  '<div class="photos" id="photoGrid"></div>' +
+  '<div class="actions"><label class="btn ghost" for="photoIn">+ Add photos</label><span class="note" id="photoCount"></span></div>' +
+  '<input type="file" id="photoIn" accept="image/*" multiple hidden></section>';
+
+html += '<section class="card"><h2>Go / No-Go decision</h2>' +
+  '<div class="review" id="review" hidden></div>' +
+  '<div class="gng" role="radiogroup" aria-label="Go or No-Go">' +
+  '<input type="radio" name="decision" id="d-go" value="go"><label for="d-go"><span class="big">GO</span><span class="sm">Installation approved to begin</span></label>' +
+  '<input type="radio" name="decision" id="d-nogo" value="nogo"><label for="d-nogo"><span class="big">NO-GO</span><span class="sm">Delayed pending resolution</span></label></div>' +
+  '<div class="f"><label for="reason">Reason</label><textarea id="reason" name="reason"></textarea></div>' +
+  '<div class="grid">' +
+  '<div class="f"><label for="sigInstaller">Installer signature (type name)</label><input type="text" id="sigInstaller" name="sigInstaller" autocomplete="off"></div>' +
+  '<div class="f"><label for="sigInstallerDate">Date</label><input type="date" id="sigInstallerDate" name="sigInstallerDate"></div>' +
+  '<div class="f"><label for="sigSup">Supervisor / representative</label><input type="text" id="sigSup" name="sigSup" autocomplete="off"></div>' +
+  '<div class="f"><label for="sigSupDate">Date</label><input type="date" id="sigSupDate" name="sigSupDate"></div>' +
+  '</div></section>' +
+  '<section class="card"><h2>Report</h2><div class="actions">' +
+  '<button class="btn" type="button" id="mkpdf">Create PDF report</button>' +
+  '<button class="btn ghost" type="button" id="copy">Copy summary</button>' +
+  '<button class="btn ghost" type="button" id="clear">Clear form</button>' +
+  '<div class="confirm" id="confirm" hidden><span class="note">Erase every entry?</span>' +
+  '<button class="btn danger" type="button" id="clearYes">Erase</button>' +
+  '<button class="btn ghost" type="button" id="clearNo">Keep</button></div></div>' +
+  '<div class="report" id="report" hidden><div class="ready" id="readyTxt"></div><div class="actions">' +
+  '<button class="btn" type="button" id="sharepdf">Email / share PDF</button>' +
+  '<button class="btn ghost" type="button" id="savepdf">Save PDF</button></div></div>' +
+  '<div class="note" id="status">Entries and photos save on this device as you go. Create the PDF, then tap Email / share and pick Mail.</div></section>';
+
+form.innerHTML = html;
+
+var KEY = "toi-checklist-v1";
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+function load() { try { var r = localStorage.getItem(KEY); if (r) state = JSON.parse(r) || {}; } catch (e) { state = {}; } }
+
+function apply() {
+  Object.keys(state).forEach(function (k) {
+    var v = state[k];
+    var radio = form.querySelector('input[type=radio][name="' + k + '"][value="' + v + '"]');
+    if (radio) { radio.checked = true; return; }
+    var el = document.getElementById(k);
+    if (el && el.type !== "radio") el.value = v;
+  });
+}
+
+function pad(n) { return (n < 10 ? "0" : "") + n; }
+function setDefaults() {
+  var d = new Date();
+  var ds = d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  var ts = pad(d.getHours()) + ":" + pad(d.getMinutes());
+  if (!state.date) { state.date = ds; document.getElementById("date").value = ds; }
+  if (!state.time) { state.time = ts; document.getElementById("time").value = ts; }
+}
+
+function num(id) { var v = parseFloat(String(state[id] || "").replace(",", ".")); return isNaN(v) ? null : v; }
+
+function dewCalc(tF, rh) {
+  var c = (tF - 32) * 5 / 9, a = 17.62, b = 243.12;
+  var g = Math.log(rh / 100) + a * c / (b + c);
+  var dc = b * g / (a - g);
+  return dc * 9 / 5 + 32;
+}
+
+function updateDew() {
+  var el = document.getElementById("dewhint");
+  var air = num("air"), rh = num("rh"), surf = num("surf"), dew = num("dew");
+  var out = "";
+  if (air !== null && rh !== null && rh > 0 && rh <= 100) {
+    var calc = Math.round(dewCalc(air, rh) * 10) / 10;
+    out += 'Calculated dew point <b>' + calc + ' °F</b> <button type="button" id="usedew" data-v="' + calc + '">Use</button>';
+  }
+  if (surf !== null && dew !== null) {
+    var m = Math.round((surf - dew) * 10) / 10;
+    out += (out ? ' · ' : '') + 'Surface is <b>' + (m >= 0 ? m + ' °F above' : Math.abs(m) + ' °F below') + '</b> dew point. Check the margin your manufacturer requires.';
+  }
+  if (!out) out = 'Enter air temp and RH to calculate dew point, or type a reading from your meter.';
+  el.innerHTML = out;
+}
+
+function update() {
+  var total = ynIds.length + numIds.length, done = 0, bad = [];
+  ynIds.forEach(function (id) { if (state[id]) done++; if (state[id] === "no") bad.push(ynLabels[id]); });
+  numIds.forEach(function (id) { if (num(id) !== null) done++; });
+  document.getElementById("count").textContent = done + " / " + total;
+  document.getElementById("barfill").style.width = (total ? done / total * 100 : 0) + "%";
+  var rv = document.getElementById("review");
+  var open = ynIds.length - ynIds.filter(function (id) { return state[id]; }).length;
+  if (bad.length || open) {
+    var h = "";
+    if (bad.length) h += '<strong>' + bad.length + ' item' + (bad.length > 1 ? 's' : '') + ' marked No</strong><ul>' + bad.map(function (b) { return '<li>' + esc(b) + '</li>'; }).join("") + '</ul>';
+    if (open) h += '<div>' + open + ' Yes/No item' + (open > 1 ? 's' : '') + ' still unanswered.</div>';
+    rv.innerHTML = h; rv.hidden = false;
+  } else { rv.hidden = true; rv.innerHTML = ""; }
+  updateDew();
+}
+
+function summary() {
+  var L = [];
+  L.push("TIME OF INSTALL (TOI) – SITE INSTALLATION START CHECKLIST");
+  var info = { project: "Project", location: "Location", date: "Date", time: "Time", installer: "Installer", gc: "General Contractor", mfr: "Flooring Manufacturer", product: "Flooring Product", lot: "Adhesive/Lot #" };
+  Object.keys(info).forEach(function (k) { L.push(info[k] + ": " + (state[k] || "—")); });
+  SECTIONS.forEach(function (s) {
+    if (s.kind === "info") return;
+    L.push(""); L.push(s.title.toUpperCase());
+    (s.nums || []).forEach(function (n) { L.push(n[1] + ": " + (state[n[0]] ? state[n[0]] + (n[2] ? " " + n[2] : "") : "—")); });
+    (s.yn || []).forEach(function (q) { var v = state[q[0]]; L.push(q[1] + ": " + (v === "yes" ? "Yes" : v === "no" ? "No" : "—")); });
+    if (s.comments) L.push("Comments / observations: " + (state.comments || "—"));
+  });
+  L.push(""); L.push("DECISION: " + (state.decision === "go" ? "GO – Installation approved to begin" : state.decision === "nogo" ? "NO-GO – Installation delayed pending resolution" : "—"));
+  L.push("Reason: " + (state.reason || "—"));
+  L.push("Installer: " + (state.sigInstaller || "—") + "  " + (state.sigInstallerDate || ""));
+  L.push("Supervisor/Representative: " + (state.sigSup || "—") + "  " + (state.sigSupDate || ""));
+  return L.join("\n");
+}
+
+function setStatus(t) { document.getElementById("status").textContent = t; }
+
+form.addEventListener("input", function (e) {
+  var t = e.target;
+  if (t.type === "file") return;
+  if (t.getAttribute("data-pid")) { setCaption(t.getAttribute("data-pid"), t.value); return; }
+  var k = t.name || t.id; if (!k) return;
+  dropReport();
+  if (t.type === "radio") { if (t.checked) state[k] = t.value; } else state[k] = t.value;
+  save(); update();
+});
+form.addEventListener("click", function (e) {
+  var t = e.target;
+  if (t.id === "usedew") { state.dew = t.getAttribute("data-v"); document.getElementById("dew").value = state.dew; save(); update(); }
+  if (t.id === "copy") {
+    var txt = summary();
+    var ok = function () { setStatus("Summary copied."); };
+    var fallback = function () {
+      var ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      var r = false; try { r = document.execCommand("copy"); } catch (x) {}
+      document.body.removeChild(ta);
+      setStatus(r ? "Summary copied." : "Copy was blocked here. Use the screenshot or print route from your device instead.");
+    };
+    try { navigator.clipboard.writeText(txt).then(ok, fallback); } catch (x) { fallback(); }
+  }
+  if (t.id === "clear") { document.getElementById("confirm").hidden = false; t.hidden = true; }
+  if (t.id === "clearNo") { document.getElementById("confirm").hidden = true; document.getElementById("clear").hidden = false; }
+  if (t.id === "mkpdf") makeReport();
+  if (t.id === "sharepdf") sharePdf();
+  if (t.id === "savepdf") savePdf();
+  if (t.getAttribute && t.getAttribute("data-del")) removePhoto(t.getAttribute("data-del"));
+  if (t.id === "clearYes") {
+    state = {}; save(); clearPhotos();
+    form.querySelectorAll("input, textarea").forEach(function (el) { if (el.type === "radio") el.checked = false; else el.value = ""; });
+    setDefaults(); save(); update();
+    document.getElementById("confirm").hidden = true; document.getElementById("clear").hidden = false;
+    setStatus("Form cleared.");
+  }
+});
+
+/* ---------- Photos: shrunk to 1600px JPEG, kept in IndexedDB on this phone ---------- */
+var photos = [];
+var dbP = null;
+function idb() {
+  if (dbP) return dbP;
+  dbP = new Promise(function (res, rej) {
+    try {
+      var r = indexedDB.open("toi-photos", 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore("p", { keyPath: "id" }); };
+      r.onsuccess = function () { res(r.result); };
+      r.onerror = function () { rej(r.error); };
+    } catch (e) { rej(e); }
+  });
+  return dbP;
+}
+function store(op, val) {
+  return idb().then(function (db) {
+    return new Promise(function (res) {
+      var tx = db.transaction("p", "readwrite"), s = tx.objectStore("p");
+      if (op === "put") s.put(val); else if (op === "del") s.delete(val); else s.clear();
+      tx.oncomplete = res; tx.onerror = res; tx.onabort = res;
+    });
+  }).catch(function () {});
+}
+function loadPhotos() {
+  return idb().then(function (db) {
+    return new Promise(function (res) {
+      var rq = db.transaction("p", "readonly").objectStore("p").getAll();
+      rq.onsuccess = function () { res(rq.result || []); };
+      rq.onerror = function () { res([]); };
+    });
+  }).then(function (list) {
+    photos = list.sort(function (a, b) { return a.t - b.t; });
+    renderPhotos();
+  }).catch(function () { renderPhotos(); });
+}
+function shrink(file) {
+  return new Promise(function (res, rej) {
+    var u = URL.createObjectURL(file), im = new Image();
+    im.onload = function () {
+      var s = Math.min(1, 1600 / Math.max(im.naturalWidth, im.naturalHeight));
+      var w = Math.round(im.naturalWidth * s), h = Math.round(im.naturalHeight * s);
+      var c = document.createElement("canvas"); c.width = w; c.height = h;
+      c.getContext("2d").drawImage(im, 0, 0, w, h);
+      URL.revokeObjectURL(u);
+      c.toBlob(function (b) { if (b) res({ blob: b, w: w, h: h }); else rej(); }, "image/jpeg", 0.8);
+    };
+    im.onerror = function () { URL.revokeObjectURL(u); rej(); };
+    im.src = u;
+  });
+}
+function renderPhotos() {
+  var g = document.getElementById("photoGrid");
+  g.innerHTML = photos.map(function (p, i) {
+    if (!p.url) p.url = URL.createObjectURL(p.blob);
+    return '<div class="ph"><img src="' + p.url + '" alt="Photo ' + (i + 1) + '">' +
+      '<div class="ph-row"><input type="text" data-pid="' + p.id + '" value="' + esc(p.cap || "") + '" placeholder="Caption" aria-label="Caption for photo ' + (i + 1) + '">' +
+      '<button type="button" data-del="' + p.id + '" aria-label="Remove photo ' + (i + 1) + '">✕</button></div></div>';
+  }).join("");
+  document.getElementById("photoCount").textContent = photos.length ? photos.length + " photo" + (photos.length > 1 ? "s" : "") : "";
+}
+var capTimer = {};
+function setCaption(id, v) {
+  var p = photos.filter(function (x) { return x.id === id; })[0]; if (!p) return;
+  p.cap = v; dropReport();
+  clearTimeout(capTimer[id]);
+  capTimer[id] = setTimeout(function () { store("put", { id: p.id, blob: p.blob, w: p.w, h: p.h, cap: p.cap, t: p.t }); }, 400);
+}
+function removePhoto(id) {
+  photos = photos.filter(function (p) { if (p.id === id && p.url) URL.revokeObjectURL(p.url); return p.id !== id; });
+  store("del", id); renderPhotos(); dropReport();
+}
+function clearPhotos() {
+  photos.forEach(function (p) { if (p.url) URL.revokeObjectURL(p.url); });
+  photos = []; store("clear"); renderPhotos(); dropReport();
+}
+document.getElementById("photoIn").addEventListener("change", function (e) {
+  var files = Array.prototype.slice.call(e.target.files || []);
+  e.target.value = "";
+  if (!files.length) return;
+  setStatus("Adding " + files.length + " photo" + (files.length > 1 ? "s" : "") + "…");
+  var failed = 0;
+  files.reduce(function (chain, f) {
+    return chain.then(function () {
+      return shrink(f).then(function (r) {
+        var p = { id: "p" + Date.now() + Math.random().toString(36).slice(2, 7), blob: r.blob, w: r.w, h: r.h, cap: "", t: Date.now() };
+        photos.push(p);
+        return store("put", { id: p.id, blob: p.blob, w: p.w, h: p.h, cap: p.cap, t: p.t });
+      }, function () { failed++; });
+    });
+  }, Promise.resolve()).then(function () {
+    renderPhotos(); dropReport();
+    setStatus(failed ? failed + " photo" + (failed > 1 ? "s" : "") + " could not be read. Try a JPEG or retake it." : "Photos added.");
+  });
+});
+
+/* ---------- PDF report ---------- */
+var report = null;
+function dropReport() { report = null; var r = document.getElementById("report"); if (r) r.hidden = true; }
+
+function blobToData(b) {
+  return new Promise(function (res, rej) { var fr = new FileReader(); fr.onload = function () { res(fr.result); }; fr.onerror = rej; fr.readAsDataURL(b); });
+}
+function fileName() {
+  var p = (state.project || "Job").replace(/[\\\/:*?"<>|]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 60) || "Job";
+  return "TOI " + p + " " + (state.date || "") + ".pdf";
+}
+function fmtDate(s) {
+  if (!s) return "";
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s); return m ? m[2] + "/" + m[3] + "/" + m[1] : s;
+}
+
+function buildPdf() {
+  var J = window.jspdf && window.jspdf.jsPDF;
+  if (!J) return Promise.reject(new Error("nolib"));
+  var doc = new J({ unit: "pt", format: "letter" });
+  var W = 612, H = 792, M = 40, CW = W - 2 * M, y = 0;
+  var ACC = [29, 92, 99], GO = [31, 122, 69], NOGO = [180, 35, 24], MUT = [93, 106, 101], LINE = [211, 217, 213], FG = [28, 36, 33];
+  function col(c) { doc.setTextColor(c[0], c[1], c[2]); }
+  function ensure(h) { if (y + h > H - 50) { doc.addPage(); y = 50; } }
+  function heading(t) {
+    ensure(40); y += 14;
+    doc.setFont("helvetica", "bold"); doc.setFontSize(11); col(ACC);
+    doc.text(t.toUpperCase(), M, y); y += 6;
+    doc.setDrawColor(ACC[0], ACC[1], ACC[2]); doc.setLineWidth(1); doc.line(M, y, M + CW, y); y += 4;
+  }
+  function row(label, val, tone) {
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9.5);
+    var lw = doc.splitTextToSize(label, CW - 150);
+    var h = Math.max(lw.length * 12, 12) + 6;
+    ensure(h);
+    col(FG); doc.text(lw, M, y + 12);
+    doc.setFont("helvetica", "bold");
+    col(tone === "yes" ? GO : tone === "no" ? NOGO : tone === "blank" ? MUT : FG);
+    doc.text(val, M + CW, y + 12, { align: "right" });
+    y += h;
+    doc.setDrawColor(LINE[0], LINE[1], LINE[2]); doc.setLineWidth(.5); doc.line(M, y, M + CW, y);
+  }
+  function para(label, text) {
+    doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); col(MUT);
+    ensure(30); y += 14; doc.text(label.toUpperCase(), M, y); y += 4;
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); col(text ? FG : MUT);
+    var lines = doc.splitTextToSize(text || "-", CW);
+    lines.forEach(function (ln) { ensure(13); y += 12.5; doc.text(ln, M, y); });
+    y += 4;
+  }
+  function v(k) { return state[k] ? String(state[k]) : ""; }
+
+  // Title band
+  doc.setFillColor(ACC[0], ACC[1], ACC[2]); doc.rect(0, 0, W, 78, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.text("TIME OF INSTALL (TOI)", M, 36);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.text("Site installation start checklist", M, 54);
+  var dec = state.decision === "go" ? ["GO", GO] : state.decision === "nogo" ? ["NO-GO", NOGO] : ["PENDING", MUT];
+  doc.setFont("helvetica", "bold"); doc.setFontSize(14);
+  var bw = doc.getTextWidth(dec[0]) + 28;
+  doc.setFillColor(255, 255, 255); doc.roundedRect(W - M - bw, 22, bw, 34, 4, 4, "F");
+  col(dec[1]); doc.text(dec[0], W - M - bw / 2, 44, { align: "center" });
+  y = 96;
+
+  // Job details, two columns
+  var info = [["Project", v("project")], ["Location", v("location")], ["Date", fmtDate(v("date"))], ["Time", v("time")],
+    ["Installer", v("installer")], ["General contractor", v("gc")], ["Flooring manufacturer", v("mfr")], ["Flooring product", v("product")], ["Adhesive / lot #", v("lot")]];
+  heading("Job details");
+  var half = CW / 2 - 8;
+  for (var i = 0; i < info.length; i += 2) {
+    var pair = info.slice(i, i + 2), hh = 0;
+    pair.forEach(function (it) { doc.setFontSize(10); hh = Math.max(hh, doc.splitTextToSize(it[1] || "-", half).length); });
+    ensure(16 + hh * 12 + 6);
+    pair.forEach(function (it, j) {
+      var x = M + j * (half + 16);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); col(MUT); doc.text(it[0].toUpperCase(), x, y + 11);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10); col(it[1] ? FG : MUT);
+      doc.text(doc.splitTextToSize(it[1] || "-", half), x, y + 24);
+    });
+    y += 16 + hh * 12 + 6;
+  }
+
+  // Checklist sections
+  SECTIONS.forEach(function (s) {
+    if (s.kind === "info") return;
+    heading(s.title);
+    (s.nums || []).forEach(function (n) {
+      var val = v(n[0]); row(n[1], val ? val + (n[2] ? " " + n[2] : "") : "-", val ? "" : "blank");
+    });
+    (s.yn || []).forEach(function (q) {
+      var a = state[q[0]]; row(q[1], a === "yes" ? "Yes" : a === "no" ? "No" : "-", a || "blank");
+    });
+    if (s.comments) para("Comments / observations", v("comments"));
+  });
+
+  // Decision
+  heading("Go / No-Go decision");
+  var bad = ynIds.filter(function (id) { return state[id] === "no"; }).map(function (id) { return ynLabels[id]; });
+  ensure(40); y += 8;
+  doc.setFillColor(dec[1][0], dec[1][1], dec[1][2]); doc.roundedRect(M, y, CW, 30, 4, 4, "F");
+  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(12);
+  doc.text(state.decision === "go" ? "GO - Installation approved to begin" : state.decision === "nogo" ? "NO-GO - Installation delayed pending resolution" : "No decision recorded", M + 12, y + 19);
+  y += 34;
+  if (bad.length) para("Items marked No (" + bad.length + ")", bad.map(function (b) { return "- " + b; }).join("\n"));
+  para("Reason", v("reason"));
+  ensure(60); y += 26;
+  [[v("sigInstaller"), fmtDate(v("sigInstallerDate")), "Installer"], [v("sigSup"), fmtDate(v("sigSupDate")), "Supervisor / representative"]].forEach(function (sg, j) {
+    var x = M + j * (half + 16);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(11); col(FG); doc.text(sg[0] || " ", x, y);
+    doc.setFontSize(9); doc.text(sg[1] || "", x + half, y, { align: "right" });
+    doc.setDrawColor(FG[0], FG[1], FG[2]); doc.setLineWidth(.6); doc.line(x, y + 5, x + half, y + 5);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); col(MUT); doc.text(sg[2].toUpperCase() + "   DATE", x, y + 16);
+  });
+  y += 24;
+
+  // Photos, two per page
+  var chain = Promise.resolve();
+  if (photos.length) {
+    var boxH = 300;
+    photos.forEach(function (p, idx) {
+      chain = chain.then(function () { return blobToData(p.blob); }).then(function (data) {
+        if (idx % 2 === 0) {
+          doc.addPage(); y = 50;
+          doc.setFont("helvetica", "bold"); doc.setFontSize(11); col(ACC);
+          doc.text("PHOTOS" + (photos.length > 2 ? "  (" + (idx + 1) + "-" + Math.min(idx + 2, photos.length) + " of " + photos.length + ")" : ""), M, y);
+          y += 6; doc.setDrawColor(ACC[0], ACC[1], ACC[2]); doc.setLineWidth(1); doc.line(M, y, M + CW, y); y += 12;
+        }
+        var s = Math.min(CW / p.w, boxH / p.h), w = p.w * s, h = p.h * s;
+        doc.addImage(data, "JPEG", M + (CW - w) / 2, y, w, h, undefined, "FAST");
+        y += h + 14;
+        doc.setFont("helvetica", "bold"); doc.setFontSize(9); col(FG);
+        doc.text("Photo " + (idx + 1), M, y);
+        doc.setFont("helvetica", "normal"); col(MUT);
+        var when = new Date(p.t);
+        doc.text(when.toLocaleDateString() + " " + when.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }), M + CW, y, { align: "right" });
+        if (p.cap) { col(FG); var cl = doc.splitTextToSize(p.cap, CW); doc.text(cl, M, y + 13); y += cl.length * 12; }
+        y += 26;
+      });
+    });
+  }
+
+  return chain.then(function () {
+    var n = doc.getNumberOfPages(), stamp = new Date().toLocaleString();
+    for (var k = 1; k <= n; k++) {
+      doc.setPage(k); doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); col(MUT);
+      doc.text("TOI checklist" + (state.project ? " - " + state.project : "") + "   |   Generated " + stamp, M, H - 24);
+      doc.text("Page " + k + " of " + n, W - M, H - 24, { align: "right" });
+    }
+    return { blob: doc.output("blob"), pages: n };
+  });
+}
+
+function makeReport() {
+  var b = document.getElementById("mkpdf");
+  b.disabled = true; setStatus("Building PDF…");
+  buildPdf().then(function (r) {
+    report = { blob: r.blob, name: fileName() };
+    var mb = r.blob.size / 1048576;
+    document.getElementById("readyTxt").innerHTML = "Report ready: <b>" + r.pages + " page" + (r.pages > 1 ? "s" : "") + "</b>, " +
+      photos.length + " photo" + (photos.length === 1 ? "" : "s") + ", <b>" + (mb < 1 ? Math.max(1, Math.round(mb * 1024)) + " KB" : mb.toFixed(1) + " MB") + "</b>";
+    document.getElementById("report").hidden = false;
+    setStatus("Tap Email / share and pick Mail. The PDF is attached for you.");
+  }, function (e) {
+    setStatus(e && e.message === "nolib" ? "The PDF tool didn't load. Check your signal and reload the page." : "Couldn't build the PDF. Try again, or remove a photo.");
+  }).then(function () { b.disabled = false; });
+}
+
+function viaDownloads() {
+  if (!window.claude || !claude.use) return Promise.resolve(false);
+  return claude.use("downloads").then(function (dl) {
+    if (!dl) return false;
+    return dl.save({ filename: report.name, data: report.blob }).then(function () {
+      setStatus("PDF handed off. If Mail didn't open, attach the saved PDF to a new email.");
+      return true;
+    }, function (e) {
+      if (e && e.code === "declined") { setStatus("Save cancelled."); return true; }
+      if (e && e.code === "rate_limited") { setStatus("A save prompt is already open. Finish it, then try again."); return true; }
+      return false;
+    });
+  }, function () { return false; });
+}
+function viaLink() {
+  var u = URL.createObjectURL(report.blob), a = document.createElement("a");
+  a.href = u; a.download = report.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(u); }, 60000);
+  setStatus("PDF downloaded. Attach it to an email from your Downloads.");
+}
+function sharePdf() {
+  if (!report) return;
+  var f = null;
+  try { f = new File([report.blob], report.name, { type: "application/pdf" }); } catch (e) {}
+  var data = { files: f ? [f] : [], title: report.name.replace(/\.pdf$/, ""), text: "TOI checklist" + (state.project ? " – " + state.project : "") + (state.decision ? (state.decision === "go" ? " (GO)" : " (NO-GO)") : "") };
+  var can = false;
+  try { can = !!(f && navigator.share && navigator.canShare && navigator.canShare({ files: [f] })); } catch (e) {}
+  if (can) {
+    navigator.share(data).then(function () { setStatus("Report shared."); }, function (e) {
+      if (e && e.name === "AbortError") { setStatus("Share cancelled."); return; }
+      savePdf();
+    });
+  } else savePdf();
+}
+function savePdf() {
+  if (!report) return;
+  viaDownloads().then(function (done) { if (!done) viaLink(); });
+}
+
+load(); apply(); setDefaults(); update(); loadPhotos();
+</script>
+
+<script>if("serviceWorker"in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script>
+</body></html>
